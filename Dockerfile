@@ -4,7 +4,9 @@ RUN apt-get update && apt-get install -y \
     libicu-dev libzip-dev libpng-dev libcurl4-openssl-dev \
     libonig-dev libxml2-dev \
     && docker-php-ext-install intl zip gd pdo_mysql curl mbstring \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && a2dismod mpm_event \
+    && a2enmod mpm_prefork
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
