@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 RUN apt-get update && apt-get install -y \
     nginx libicu-dev libzip-dev libpng-dev \
     libcurl4-openssl-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install intl zip gd pdo_mysql curl mbstring \
+    && docker-php-ext-install intl zip gd pdo_mysql mysqli curl mbstring \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
