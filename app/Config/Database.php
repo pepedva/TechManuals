@@ -31,13 +31,12 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
-        $host = getenv('MYSQLHOST') ?: getenv('database.default.hostname');
-        $user = getenv('MYSQLUSER') ?: getenv('database.default.username') ?: 'root';
-        $pass = getenv('MYSQLPASSWORD') ?: getenv('database.default.password') ?: '';
-        $db   = getenv('MYSQLDATABASE') ?: getenv('database.default.database') ?: 'railway';
-        $port = (int)(getenv('MYSQLPORT') ?: getenv('database.default.DBPort') ?: 3306);
+        $host = getenv('MYSQLHOST');
+        $user = getenv('MYSQLUSER');
+        $pass = getenv('MYSQLPASSWORD');
+        $db   = getenv('MYSQLDATABASE');
+        $port = (int) getenv('MYSQLPORT');
 
-        // Debug temporal
         error_log("DB HOST: $host PORT: $port USER: $user DB: $db");
 
         if ($host) {
@@ -45,7 +44,7 @@ class Database extends Config
             $this->default['username'] = $user;
             $this->default['password'] = $pass;
             $this->default['database'] = $db;
-            $this->default['port']     = $port;
+            $this->default['port']     = $port ?: 3306;
         }
     }
 
