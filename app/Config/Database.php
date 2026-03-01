@@ -32,7 +32,7 @@ class Database extends Config
     {
         parent::__construct();
         $host = getenv('MYSQLHOST');
-        $user = getenv('MYSQLUSER');
+        $user = getenv('MYSQL_USER');
         $pass = getenv('MYSQLPASSWORD');
         $db   = getenv('MYSQLDATABASE');
         $port = (int) getenv('MYSQLPORT');
