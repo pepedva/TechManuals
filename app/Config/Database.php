@@ -37,6 +37,9 @@ class Database extends Config
         $db   = getenv('MYSQLDATABASE') ?: getenv('database.default.database') ?: 'railway';
         $port = (int)(getenv('MYSQLPORT') ?: getenv('database.default.DBPort') ?: 3306);
 
+        // Debug temporal
+        error_log("DB HOST: $host PORT: $port USER: $user DB: $db");
+
         if ($host) {
             $this->default['hostname'] = $host;
             $this->default['username'] = $user;
