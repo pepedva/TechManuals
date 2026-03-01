@@ -10,11 +10,11 @@ class Database extends Config
 
     public array $default = [
         'DSN'      => '',
-        'hostname' => $_ENV['database.default.hostname'] ?? 'localhost',
-        'username' => $_ENV['database.default.username'] ?? 'root',
-        'password' => $_ENV['database.default.password'] ?? '',
-        'database' => $_ENV['database.default.database'] ?? 'railway',
-        'DBDriver' => $_ENV['database.default.DBDriver'] ?? 'MySQLi',
+        'hostname' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'database' => 'railway',
+        'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
         'DBDebug'  => false,
@@ -25,8 +25,21 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => (int)($_ENV['database.default.DBPort'] ?? 3306),
+        'port'     => 3306,
     ];
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (getenv('database.default.hostname')) {
+            $this->default['hostname'] = getenv('database.default.hostname');
+            $this->default['username'] = getenv('database.default.username');
+            $this->default['password'] = getenv('database.default.password');
+            $this->default['database'] = getenv('database.default.database');
+            $this->default['DBDriver'] = getenv('database.default.DBDriver');
+            $this->default['port']     = (int) getenv('database.default.DBPort');
+        }
+    }
 
     public array $tests = [
         'DSN'      => '',
