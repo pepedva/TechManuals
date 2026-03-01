@@ -12,27 +12,22 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs \
     && chown -R www-data:www-data writable
 
-COPY <<NGINX /etc/nginx/sites-available/default
-server {
-    listen 80;
-    root /var/www/html/public;
-    index index.php;
-    location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-    }
-    location ~ \.php$ {
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        include fastcgi_params;
-    }
-}
-NGINX
+RUN echo 'server { \n\
+    listen $PORT; \n\
+    root /var/www/html/public; \n\
+    index index.php; \n\
+    location / { try_files $uri $uri/ /index.php?$query_string; } \n\
+    location ~ \.php$ { \n\
+        fastcgi_pass 127.0.0.1:9000; \n\
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \n\
+        include fastcgi_params; \n\
+    } \n\
+}' > /etc/nginx/sites-available/default
 
-COPY <<SCRIPT /start.sh
-#!/bin/bash
-php-fpm -D
-nginx -g "daemon off;"
-SCRIPT
+RUN echo '#!/bin/bash\n\
+sed -i "s/\$PORT/$PORT/g" /etc/nginx/sites-available/default\n\
+php-fpm -D\n\
+nginx -g "daemon off;"' > /start.sh && chmod +x /start.sh
 
-RUN chmod +x /start.sh
+EXPOSE 80
 CMD ["/start.sh"]
