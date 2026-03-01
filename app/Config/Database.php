@@ -31,15 +31,18 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
-        $host = getenv('database.default.hostname');
+        $host = getenv('MYSQLHOST') ?: getenv('database.default.hostname');
+        $user = getenv('MYSQLUSER') ?: getenv('database.default.username') ?: 'root';
+        $pass = getenv('MYSQLPASSWORD') ?: getenv('database.default.password') ?: '';
+        $db   = getenv('MYSQLDATABASE') ?: getenv('database.default.database') ?: 'railway';
+        $port = (int)(getenv('MYSQLPORT') ?: getenv('database.default.DBPort') ?: 3306);
+
         if ($host) {
             $this->default['hostname'] = $host;
-            $this->default['username'] = getenv('database.default.username') ?: 'root';
-            $this->default['password'] = getenv('database.default.password') ?: '';
-            $this->default['database'] = getenv('database.default.database') ?: 'railway';
-            $this->default['port']     = (int)(getenv('database.default.DBPort') ?: 3306);
-            // Forzar TCP en lugar de socket Unix
-            $this->default['DSN'] = 'mysqli://' . $this->default['username'] . ':' . $this->default['password'] . '@' . $host . ':' . $this->default['port'] . '/' . $this->default['database'];
+            $this->default['username'] = $user;
+            $this->default['password'] = $pass;
+            $this->default['database'] = $db;
+            $this->default['port']     = $port;
         }
     }
 
