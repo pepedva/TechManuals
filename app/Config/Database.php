@@ -31,13 +31,15 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
-        if (getenv('database.default.hostname')) {
-            $this->default['hostname'] = getenv('database.default.hostname');
-            $this->default['username'] = getenv('database.default.username');
-            $this->default['password'] = getenv('database.default.password');
-            $this->default['database'] = getenv('database.default.database');
-            $this->default['DBDriver'] = getenv('database.default.DBDriver');
-            $this->default['port']     = (int) getenv('database.default.DBPort');
+        $host = getenv('database.default.hostname');
+        if ($host) {
+            $this->default['hostname'] = $host;
+            $this->default['username'] = getenv('database.default.username') ?: 'root';
+            $this->default['password'] = getenv('database.default.password') ?: '';
+            $this->default['database'] = getenv('database.default.database') ?: 'railway';
+            $this->default['port']     = (int)(getenv('database.default.DBPort') ?: 3306);
+            // Forzar TCP en lugar de socket Unix
+            $this->default['DSN'] = 'mysqli://' . $this->default['username'] . ':' . $this->default['password'] . '@' . $host . ':' . $this->default['port'] . '/' . $this->default['database'];
         }
     }
 
